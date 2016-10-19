@@ -3,18 +3,22 @@ language: rust
 rust: stable
 cache: cargo
 
-matrix:
-  addons:
-    apt:
-      packages:
-        - nasm
-      sources:
-        - r-packages-precise
+env:
+  - PATH="$PATH:$HOME/bin"
+    NASM_VERSION="2.12.02"
 
 before_install:
   - if [ "$TRAVIS_SECURE_ENV_VARS" == "true" ]; then
       openssl aes-256-cbc -K $encrypted_083e17e709a2_key -iv $encrypted_083e17e709a2_iv -in gh_rsa.enc -out gh_rsa -d;
     fi
+
+install:
+  - pushd /tmp > /dev/null
+  - curl -SL "www.nasm.us/pub/nasm/releasebuilds/$NASM_VERSION/nasm-$NASM_VERSION.tar.xz" | tar -xJf-
+  - cd "nasm-$NASM_VERSION"
+  - ./configure --prefix="$HOME"
+  - make -j$(nproc) install
+  - popd
 
 script:
   - pushd "src/termimage-generator" > /dev/null
