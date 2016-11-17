@@ -1,0 +1,30 @@
+sudo: false
+language: generic
+cache: cargo
+
+matrix:
+  include:
+    - env:
+      addons:
+        apt:
+          packages:
+            - nasm
+          sources:
+            - r-packages-precise
+
+before_install:
+  - if [ "$TRAVIS_SECURE_ENV_VARS" == "true" ]; then
+      openssl aes-256-cbc -K $encrypted_087477c652e4_key -iv $encrypted_087477c652e4_iv -in gh_rsa.enc -out gh_rsa -d;
+    fi
+
+script:
+  - make -j$(nproc)
+
+deploy:
+  provider: releases
+  api_key:
+    secure: "y683KsA/WUrevQKeABHV80sZY/tx6hHYssxZ+4pes4OYRqlrOn8Lu2P8E5Uq7YWr75IfCFEzVVD4Slj2hb2mhmNXL9A1SyA7gl5bLz8I4kv9yLaOqDFBzLtMv0obCirM+QjCQb2hCTwFlsaSvsWQ9wtxDBvvFmbmrA+zFb5syIqJ80taVF7Ckzr8/DiIlSLLLxNPqAV5K81xn2m5qxJzZ6TSVoJYff1E9XtFrGv2p8rEXbl36erqgmclwxczBuGnXpoltqq3raxycXHtQZdG/zeI2CHFMRu9capPPRuULi2/vL2wzVKdsDS471+eCcIkZ4knzVuPWqxmvVwvtrUXUmZxxMxe+2ZrbdWcApasDkByL8YHUt31jPu/wAZZ8pd2yYkcF/g7POSkfD2DM1Twh+XTtbNT9mHpkG+CGlaqGbLtshvPx0450q1kJhC3EmjPByK+N264l6u8Qtr+CtA3yfAueOVBeX8cwwXZJyPG+NeD2O9zYS1lOoPRRIuuXwBEXM8iIN5fqA6gUdYU158CZJ/DKw2nD/RJ5r3H7Thys+gDk3taRNpfdnVMnkhdas5oKkX7DvHrH4nQ5dWi40I/lbgArzrBl8Xy1ovUppM9P1bJ3BH5hGucGgy/ULUpR/LTI3Oo90VnY6B+cpSe80JEBL0HwZHqh/F6KOA9UddgVgo="
+  file: "$DEPLOY_FILE"
+  skip_cleanup: true
+  on:
+    tags: true

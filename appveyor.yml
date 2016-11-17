@@ -1,0 +1,36 @@
+version: 0.1.0-{build}
+
+skip_tags: false
+
+platform: x64
+configuration: Release
+
+clone_folder: C:\cargo-update
+
+install:
+  - set PATH=C:\msys64\mingw64\bin;C:\msys64\usr\bin;%PATH%
+  - bash -lc "pacman --needed --noconfirm -Sy pacman-mirrors"
+  - bash -lc "pacman --noconfirm -Sy"
+  - bash -lc "pacman --noconfirm -S mingw-w64-x86_64-toolchain mingw-w64-x86_64-nasm make"
+
+build: off
+build_script:
+  - make
+
+# TODO: what the fuck do we deploy?
+artifacts:
+  - path: cargo-install-update-v0.1.0.exe
+
+deploy:
+  provider: GitHub
+  artifact: cargo-install-update-v0.1.0.exe
+  auth_token:
+    secure: ModrQXdSmFjeUt1Rr0JnVUm99U2gRQF0ObtDQtoQVztfjdS3IgmHT/aljf5qgQul
+  on:
+    appveyor_repo_tag: true
+
+notifications:
+  - provider: Email
+    to:
+      - nabijaczleweli@gmail.com
+    on_build_status_changed: true

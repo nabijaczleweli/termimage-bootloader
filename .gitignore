@@ -1,0 +1,10 @@
+*
+!.gitignore
+!.travis.yml
+!gh_rsa.enc
+!appveyor.yml
+!LICENSE
+!*.sublime-project
+!*.md
+!src
+!src/**
