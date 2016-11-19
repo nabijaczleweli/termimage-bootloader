@@ -3,7 +3,7 @@
 	[
 		{
 			"working_dir": "$project_path",
-			"shell_cmd": "make -j8",
+			"shell_cmd": "cd src/termimage-generator && cargo build && cargo test && cd ../termimage-bootloader && make -j8 && cd ../..",
 			"name": "Build termimage-bootloader",
 
 			"target": "ansi_color_build",
@@ -14,8 +14,13 @@
 	[
 		{
 			"follow_symlinks": true,
-			"name": "Source",
-			"path": "src"
+			"name": "Rust generator source",
+			"path": "src/termimage-generator"
+		},
+		{
+			"follow_symlinks": true,
+			"name": "Termimage bootloader source",
+			"path": "src/termimage-bootloader"
 		},
 		{
 			"follow_symlinks": true,

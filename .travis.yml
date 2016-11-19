@@ -1,5 +1,6 @@
 sudo: false
-language: generic
+language: rust
+rust: stable
 cache: cargo
 
 matrix:
@@ -18,13 +19,28 @@ before_install:
     fi
 
 script:
+  - pushd "src/termimage-generator" > /dev/null
+  - cargo build --verbose
+  - cargo test  --verbose
+  - popd > /dev/null
+  -
+  - pushd "src/termimage-bootloader" > /dev/null
   - make -j$(nproc)
+  - popd > /dev/null
+
+after_success:
+  - if [ "$LANGUAGE" == "Rust" ] && [ "$DEPLOY" ] && [ "$TRAVIS_TAG" ] && [ "$TRAVIS_SECURE_ENV_VARS" == "true" ]; then
+      pushd "src/termimage-generator" > /dev/null;
+      cp target/release/termimage-bootloader-generator "$TRAVIS_BUILD_DIR/../termimage-bootloader-generator-$TRAVIS_TAG";
+      strip --strip-all --remove-section=.comment --remove-section=.note "$TRAVIS_BUILD_DIR/../termimage-bootloader-generator-$TRAVIS_TAG";
+      popd > /dev/null;
+    fi
 
 deploy:
   provider: releases
   api_key:
     secure: "y683KsA/WUrevQKeABHV80sZY/tx6hHYssxZ+4pes4OYRqlrOn8Lu2P8E5Uq7YWr75IfCFEzVVD4Slj2hb2mhmNXL9A1SyA7gl5bLz8I4kv9yLaOqDFBzLtMv0obCirM+QjCQb2hCTwFlsaSvsWQ9wtxDBvvFmbmrA+zFb5syIqJ80taVF7Ckzr8/DiIlSLLLxNPqAV5K81xn2m5qxJzZ6TSVoJYff1E9XtFrGv2p8rEXbl36erqgmclwxczBuGnXpoltqq3raxycXHtQZdG/zeI2CHFMRu9capPPRuULi2/vL2wzVKdsDS471+eCcIkZ4knzVuPWqxmvVwvtrUXUmZxxMxe+2ZrbdWcApasDkByL8YHUt31jPu/wAZZ8pd2yYkcF/g7POSkfD2DM1Twh+XTtbNT9mHpkG+CGlaqGbLtshvPx0450q1kJhC3EmjPByK+N264l6u8Qtr+CtA3yfAueOVBeX8cwwXZJyPG+NeD2O9zYS1lOoPRRIuuXwBEXM8iIN5fqA6gUdYU158CZJ/DKw2nD/RJ5r3H7Thys+gDk3taRNpfdnVMnkhdas5oKkX7DvHrH4nQ5dWi40I/lbgArzrBl8Xy1ovUppM9P1bJ3BH5hGucGgy/ULUpR/LTI3Oo90VnY6B+cpSe80JEBL0HwZHqh/F6KOA9UddgVgo="
-  file: "$DEPLOY_FILE"
+  file: "termimage-bootloader-generator-$TRAVIS_TAG"
   skip_cleanup: true
   on:
     tags: true

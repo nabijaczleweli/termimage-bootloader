@@ -8,3 +8,5 @@
 !*.md
 !src
 !src/**
+src/termimage-generator/target
+src/termimage-generator/Cargo.lock

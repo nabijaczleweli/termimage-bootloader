@@ -5,25 +5,36 @@ skip_tags: false
 platform: x64
 configuration: Release
 
-clone_folder: C:\cargo-update
+clone_folder: C:\termimage-bootloader
 
 install:
-  - set PATH=C:\msys64\mingw64\bin;C:\msys64\usr\bin;%PATH%
+  - set PATH=C:\msys64\mingw64\bin;C:\msys64\usr\bin;%PATH%;C:\Users\appveyor\.cargo\bin
   - bash -lc "pacman --needed --noconfirm -Sy pacman-mirrors"
   - bash -lc "pacman --noconfirm -Sy"
   - bash -lc "pacman --noconfirm -S mingw-w64-x86_64-toolchain mingw-w64-x86_64-nasm make"
+  -
+  - curl -SL https://win.rustup.rs/ -oC:\rustup-init.exe
+  - C:\rustup-init.exe -y --default-host="x86_64-pc-windows-gnu"
 
 build: off
 build_script:
+  - pushd src\termimage-generator
+  - cargo build --release --verbose
+  - cargo test  --release --verbose
+  - cp target\release\termimage-bootloader-generator.exe ..\..\termimage-bootloader-generator-v0.1.0.exe
+  - strip --strip-all --remove-section=.comment --remove-section=.note ..\..\termimage-bootloader-generator-v0.1.0.exe
+  - popd
+  -
+  - pushd src\termimage-bootloader
   - make
+  - popd
 
-# TODO: what the fuck do we deploy?
 artifacts:
-  - path: cargo-install-update-v0.1.0.exe
+  - path: termimage-bootloader-generator-v0.1.0.exe
 
 deploy:
   provider: GitHub
-  artifact: cargo-install-update-v0.1.0.exe
+  artifact: termimage-bootloader-generator-v0.1.0.exe
   auth_token:
     secure: ModrQXdSmFjeUt1Rr0JnVUm99U2gRQF0ObtDQtoQVztfjdS3IgmHT/aljf5qgQul
   on:

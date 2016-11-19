@@ -1,0 +1,23 @@
+[package]
+name = "termimage-bootloader-generator"
+description = "Generator to display a textified image from a floppy, old-school style"
+documentation = "https://cdn.rawgit.com/nabijaczleweli/termimage-bootloader/doc/termimage_bootloader_generator/index.html"
+repository = "https://github.com/nabijaczleweli/termimage-bootloader"
+readme = "README.md"
+keywords = ["termimage", "bootloader", "termimage", "dos", "generator"]
+license = "MIT"
+# Remember to also update in appveyor.yml
+version = "0.1.0"
+# Remember to also update in termimage-bootloader-generator.md
+authors = ["nabijaczleweli <nabijaczleweli@gmail.com>"]
+
+
+[dependencies]
+image = "0.10"
+clap = "2.18"
+
+
+[[bin]]
+name = "termimage-bootloader-generator"
+test = false
+doc = false
