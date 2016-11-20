@@ -6,7 +6,7 @@
 !LICENSE
 !*.sublime-project
 !*.md
-!src
-!src/**
-src/termimage-generator/target
-src/termimage-generator/Cargo.lock
+!src/termimage-generator/Cargo.toml
+!src/termimage-generator/rustfmt.toml
+!src/termimage-generator/*.md
+!src/termimage-bootloader/**

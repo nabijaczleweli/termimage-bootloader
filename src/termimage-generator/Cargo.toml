@@ -13,6 +13,7 @@ authors = ["nabijaczleweli <nabijaczleweli@gmail.com>"]
 
 
 [dependencies]
+termimage = "0.3"
 image = "0.10"
 clap = "2.18"
 
