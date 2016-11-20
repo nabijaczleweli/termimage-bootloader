@@ -1,0 +1,5 @@
+BITS 16
+CPU 8086
+
+
+%define ORIGIN 7c00h

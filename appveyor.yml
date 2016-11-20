@@ -18,16 +18,15 @@ install:
 
 build: off
 build_script:
-  - pushd src\termimage-generator
+  - cd src\termimage-generator
   - cargo build --release --verbose
   - cargo test  --release --verbose
   - cp target\release\termimage-bootloader-generator.exe ..\..\termimage-bootloader-generator-v0.1.0.exe
   - strip --strip-all --remove-section=.comment --remove-section=.note ..\..\termimage-bootloader-generator-v0.1.0.exe
-  - popd
   -
-  - pushd src\termimage-bootloader
+  - cd ..\termimage-bootloader
   - make
-  - popd
+  - cd ..\..
 
 artifacts:
   - path: termimage-bootloader-generator-v0.1.0.exe
