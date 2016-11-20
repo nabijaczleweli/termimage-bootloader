@@ -4,14 +4,12 @@ rust: stable
 cache: cargo
 
 matrix:
-  include:
-    - env:
-      addons:
-        apt:
-          packages:
-            - nasm
-          sources:
-            - r-packages-precise
+  addons:
+    apt:
+      packages:
+        - nasm
+      sources:
+        - r-packages-precise
 
 before_install:
   - if [ "$TRAVIS_SECURE_ENV_VARS" == "true" ]; then
